@@ -15,18 +15,28 @@ public class Dodo{
     // void rest();
     // void undo();
 
+    /**
+     * getter for the hunger level of the dodo
+     * @return int for hunger level, which initalizes at -1, hungry
+     */
     public int getHunger(){
         return this.hunger;
     }
+
     /**
-     * 
+     * method for grabbing something, it doesn't check anything it grabs, so it could be either stones or humans
      * @param item the thing being grabbed
      */
     public void grab(String item){
-        this.possessions.add(item); //indescriminately grabs items, doesn't check them
+        this.possessions.add(item); 
     }
 
 
+    /**
+     * method for dropping something from the dodo's list of possessions, usually when the dodo examines it and finds out it's a stone
+     * @param item the item being dropped from the dodo's inventory
+     * @return the item being dropped
+     */
     public String drop(String item){
         if(this.possessions.contains(item)){
             this.possessions.remove(item);
@@ -36,7 +46,11 @@ public class Dodo{
         }
     }
 
-    //dodo must examine the thing it catches, is it human and edible? Or is it inedible, like a rock human
+    /**
+     * in order to eat, the dodo has to check if what it grabbed is a human, and edible, or a rock, and inedible. If it is a human, the dodo automatically eats it.
+     * @param item the item the dodo is checking
+     * @return t/f it's a human
+     */
     public boolean examine(String item){
         if(item.equals("human")){
             this.hunger += 1; //if it's a human, it is eaten

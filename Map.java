@@ -85,7 +85,7 @@ public class Map {
                 killerDodo.examine(spoilsOfWar);
 
                if(killerDodo.getHunger()<=0){
-                    System.out.println("The dodo has a hunger of..." + killerDodo.getHunger());
+                    System.out.println("The dodo is still hungry!");
                     System.out.println();
                } else{
                     System.out.println("The dodo has been sated");
