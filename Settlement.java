@@ -4,30 +4,38 @@ import java.util.Random;
 public class Settlement {
     private ArrayList<String> humans;
     private String humanPosition;
-    private String stoneHumanPosition;
 
     public Settlement(){
         this.humans = new ArrayList<String>(2);
         this.humans.add("human");
         this.humans.add("human");
         this.humanPosition = "left"; //start on left side
-        this.stoneHumanPosition = "right"; //start on right side
     }
    
+    /**
+     * getter for the human position
+     * @return string "left" or "right" depending on the randomized location
+     */
     public String getHumanPosition(){
         return this.humanPosition;
     }
 
+    /**
+     * getter for the population of a settlement
+     * @return int for the size of the array list of humans, aka the population
+     */
     public int getPopulation(){
         return this.humans.size();
     }
 
-    public String getStoneHumanPosition(){
-        return this.stoneHumanPosition;
-    }
 
+    /**
+     * method for when the dodo has guessed the location, it either removes a human from the population, or it sends the dodo a rock, depending on the guess
+     * @param guess t/f whether or not the dodo knows where the humans are
+     * @return string "human" or "stone" depending on which the dodo is grabbing
+     */
     public String attack(boolean guess){ //if the dodo guesses correctly, a human is removed, if they're wrong, a stone is
-        swapPlace();
+        swapPlace(); //after every attack the humans consider swapping position or staying in the same place
         if(guess){
             String temp = this.humans.get(0);
             this.humans.remove(0);
@@ -39,15 +47,15 @@ public class Settlement {
         }
     }
 
-    //randomizes human and stone positions, only called by dodo attacks, if the human is right, stones are left and vice versa
+    /**
+     * usually called by attack(), this method randomizes the position of the humans within a settlement, either to the left (0) or right (1)
+     */
     public void swapPlace(){
-        Random rand = new Random(); //gets us a randomized position for people/stones positions, 0 = left, 1 = right for humans
+        Random rand = new Random(); //gets us a randomized position for people positions, 0 = left, 1 = right for humans, stones are wherever humans aren't
         if(rand.nextInt(2) == 0){
             this.humanPosition = "left";
-            this.stoneHumanPosition = "right";
         } else{
             this.humanPosition = "right";
-            this.stoneHumanPosition = "left";
         }
     }
 
