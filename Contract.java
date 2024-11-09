@@ -11,4 +11,8 @@ public interface Contract {
     void rest();
     void undo();
 
+    //killer Dodo, lesser known geologic extinction event
+    //good and bad Dodos, killer dodos and minions
+    //maybe undo is for disbanding an army?
+
 }
