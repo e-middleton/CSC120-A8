@@ -3,18 +3,18 @@ import java.util.Random;
 
 public class Settlement {
     private ArrayList<String> humans;
-    private int humanPosition;
-    private int stoneHumanPosition;
+    private String humanPosition;
+    private String stoneHumanPosition;
 
     public Settlement(){
         this.humans = new ArrayList<String>(2);
         this.humans.add("human");
         this.humans.add("human");
-        this.humanPosition = 0; //start on left side
-        this.stoneHumanPosition = 1; //start on right side
+        this.humanPosition = "left"; //start on left side
+        this.stoneHumanPosition = "right"; //start on right side
     }
    
-    public int getHumanPosition(){
+    public String getHumanPosition(){
         return this.humanPosition;
     }
 
@@ -22,7 +22,7 @@ public class Settlement {
         return this.humans.size();
     }
 
-    public int getStoneHumanPosition(){
+    public String getStoneHumanPosition(){
         return this.stoneHumanPosition;
     }
 
@@ -31,7 +31,7 @@ public class Settlement {
         if(guess){
             String temp = this.humans.get(0);
             this.humans.remove(0);
-            System.out.println("aaaah! A fallen bretheren!");
+            System.out.println("aaaah! Human eaten!");
             return temp; //returns the string at index 0;
         } else{
             System.out.println("You got a ... stone!");
@@ -41,12 +41,13 @@ public class Settlement {
 
     //randomizes human and stone positions, only called by dodo attacks, if the human is right, stones are left and vice versa
     public void swapPlace(){
-        Random rand = new Random(); //gets us a randomized position for people/stones
-        this.humanPosition = rand.nextInt(2); //gets human position randomized in a range 0,1;
-        if(this.humanPosition == 0){
-            this.stoneHumanPosition = 1;
+        Random rand = new Random(); //gets us a randomized position for people/stones positions, 0 = left, 1 = right for humans
+        if(rand.nextInt(2) == 0){
+            this.humanPosition = "left";
+            this.stoneHumanPosition = "right";
         } else{
-            this.stoneHumanPosition = 0;
+            this.humanPosition = "right";
+            this.stoneHumanPosition = "left";
         }
     }
 
