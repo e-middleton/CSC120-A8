@@ -1,14 +1,9 @@
-import java.util.ArrayList;
 
 public class Dodo{
     private int hunger;
-    private ArrayList<String> possessions; //What is the Dodo holding in its feet?
-    private int position;
 
     public Dodo(){
         this.hunger = -1; //a Dodo is born... hungry
-        this.possessions = new ArrayList<String>();
-        this.position = 0; //start on the left side
     }
 
 
@@ -17,10 +12,12 @@ public class Dodo{
     }
     /**
      * Function for grabbing an item need to make it make sense
-     * @param item the thing being grabbed
+     * @param item the thing being grabbed and or eaten
      */
     public void grab(String item){
-        this.examine(item);
+        if(this.examine(item)){
+            this.hunger += 1;
+        } 
     }
 
 
@@ -34,11 +31,12 @@ public class Dodo{
     // }
 
     //dodo must examine the thing it catches, is it human and edible? Or is it inedible, like a rock human
-    public void examine(String item){
+    public boolean examine(String item){
         if(item.equals("human")){
-            //eat
+            return true;
         } else{
             System.out.println("SQUAAAAAAAAAK");
+            return false;
         }
     }
 
