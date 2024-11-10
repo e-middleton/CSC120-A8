@@ -1,19 +1,41 @@
 import java.util.ArrayList;
 
-public class Dodo{
+public class Dodo implements Contract{
     private int hunger;
     private int size;
     public ArrayList<String> possessions;
+    private int position;
 
     public Dodo(){
         this.hunger = -1; //a Dodo is born... hungry
         this.size = 1; //normal dodo size
         possessions = new ArrayList<String>(); //initalizes empty array list
+        this.position = 0; //dodo begins in quadrant/settlement 0
     }
 
-    // boolean fly(int x, int y);
-    
-    // void undo();
+    public boolean fly(int x, int y){
+        if(x == this.position && y == (x+1)){ //you can only fly forward to the next quadrant
+            if(this.hunger >= 0){
+                this.position = y;
+                return true;
+            } else{
+                throw new RuntimeException("Not enough energy to fly, must eat a person before moving on.");
+            }
+        } else{
+            throw new RuntimeException("Cannot fly to a settlement unless it is the one nearby.");
+        }
+    }
+
+    //fly back to the quadrant you just came from, doesn't require any energy
+    public void undo(){
+        if(this.position >= 0){
+            this.position -= 1;
+        }
+    }
+
+    public int getPosition(){
+        return this.position;
+    }
 
     public int getSize(){
         return this.size;
@@ -55,13 +77,11 @@ public class Dodo{
      * @param item the item the dodo is checking
      * @return t/f it's a human
      */
-    public boolean examine(String item){
+    public void examine(String item){
         if(item.equals("human")){
             this.hunger += 1; //if it's a human, it is eaten
-            return true;
         } else{
             drop(item); //drop the item, probably a stone in rage
-            return false;
         }
     }
 
