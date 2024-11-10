@@ -2,18 +2,22 @@ import java.util.ArrayList;
 
 public class Dodo{
     private int hunger;
+    private int size;
     public ArrayList<String> possessions;
 
     public Dodo(){
         this.hunger = -1; //a Dodo is born... hungry
+        this.size = 1; //normal dodo size
         possessions = new ArrayList<String>(); //initalizes empty array list
     }
 
     // boolean fly(int x, int y);
-    // Number shrink();
-    // Number grow();
-    // void rest();
+    
     // void undo();
+
+    public int getSize(){
+        return this.size;
+    }
 
     /**
      * getter for the hunger level of the dodo
@@ -82,6 +86,66 @@ public class Dodo{
         } else{
             throw new RuntimeException("I didn't plan for any other tools? What on earth have you given the dodo?");
         }
+    }
+
+    public Number shrink(){
+        if(this.hunger < -1){
+            this.size -= 1; //if the dodo gets too hungry, it shrinks, called by flying
+            return this.size;
+        } else{
+            return this.size; //otherwise it doesn't shrink 
+        }
+    }
+
+    /**
+     * Function that causes the dodo to grow if it has enough energy/can eat enough people for energy, either it eats people from its inventory and grows,
+     * or it already has sufficient energy and uses that to grow, but if it doesn't have enough, the size doesn't change.
+     * @return the size of the dodo
+     */
+    public Number grow(){
+        if(this.possessions.contains("human")){ //if the dodo has a human in store, it eats it for energy
+            int snack = (this.possessions.indexOf("human")); 
+            examine(this.possessions.get(snack));
+            drop(this.possessions.get(snack)); 
+            if(this.possessions.contains("human")){ //if there is a second human, it is also eaten for energy (2 hunger/energy points needed to grow)
+                int snack2 = (this.possessions.indexOf("human")); 
+                examine(this.possessions.get(snack2));
+                drop(this.possessions.get(snack2));
+                this.hunger -= 2;
+                this.size += 1;
+            } else{
+                if(this.hunger >= 1){
+                    this.hunger -=2 ;
+                    this.size += 1;
+                }
+            }
+        } else{ 
+            if(this.hunger >=1 ){ //if the dodo has enough energy already from past eaten people, it can also grow
+                this.hunger -= 2; //energy is used
+                this.size += 1;
+            } else{
+                System.out.println("Not enough energy or people to eat, can't grow.");
+            }
+        }
+        return this.size;
+    }
+
+    public void rest(){
+        if(this.possessions.contains("sleeping bag")){
+            drop("sleeping bag"); //gets rid of the sleeping bag from inventory because it's been used
+            this.hunger += 1; //the same effect as eating a person, resting gives the dodo energy
+        } else{
+            System.out.println("Unable to rest, no cozy blanket!");
+        }
+    }
+
+    public void showOptions(){
+        System.out.println("The options for dodo actions are: \n + 'walk' - this tries to guess where the humans are in a settlement \n + 'fly' - moves to a new settlement from the old one \n + 'grow' - increases dodo size, but only if you have 2 humans in possession to eat for energy \n + 'drop' - removes an item from possession");
+    }
+
+    public static void main(String[] args) {
+        Dodo dodo = new Dodo();
+        dodo.showOptions();
     }
     
 
