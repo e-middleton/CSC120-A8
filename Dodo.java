@@ -30,6 +30,8 @@ public class Dodo implements Contract{
     public void undo(){
         if(this.position >= 0){
             this.position -= 1;
+        } else{
+            throw new RuntimeException("Cannot go backwards from settlement 0.");
         }
     }
 
@@ -160,7 +162,7 @@ public class Dodo implements Contract{
     }
 
     public void showOptions(){
-        System.out.println("The options for dodo actions are: \n + 'walk' - this tries to guess where the humans are in a settlement \n + 'fly' - moves to a new settlement from the old one \n + 'grow' - increases dodo size, but only if you have 2 humans in possession to eat for energy \n + 'drop' - removes an item from possession");
+        System.out.println("The options for dodo actions are: \n + 'walk' - this tries to guess where the humans are in a settlement \n + 'fly' - moves to a new settlement from the old one \n + 'undo' - goes back to the previous settlement (doesn't require energy) \n + 'grow' - increases dodo size, but only if you have 2 humans in possession to eat for energy \n + 'drop' - removes an item from possession");
     }
 
     public static void main(String[] args) {

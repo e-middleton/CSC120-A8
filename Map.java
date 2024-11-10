@@ -17,6 +17,11 @@ public class Map {
         this.tools[2] = "sleeping bag";
     }
 
+    public int numSettlements(){
+        return this.settlements.size();
+    }
+
+
     /**
      * Checks to see if the human population of a given settlement is greater than 0
      * @param n the number/index of the settlement being checked
@@ -85,7 +90,7 @@ public class Map {
         Dodo killerDodo = new Dodo();
         Scanner input = new Scanner(System.in);
         Random chance = new Random(); //every once in awhile, the dodo can get lucky and get a special tool
-        int currentSettlement = 0;
+        int currentSettlement = killerDodo.getPosition();
         String action = "begin"; //to start out with
 
         System.out.println("Global warming has given rise to a new species of dodo... a hungry one.");
@@ -134,7 +139,11 @@ public class Map {
                         System.out.println(e.getMessage());
                     }
                 } else if(action.equals("fly")){
-                    //I'm sure something important goes here
+                    if(currentSettlement < battleGround.numSettlements()){ //if they aren't at the last settlement yet, they can fly to the next
+                        killerDodo.fly(killerDodo.getPosition(), (killerDodo.getPosition() + 1));
+                    } else {
+                        System.out.println("At the last settlement, cannot go onward.");
+                    }
                 } else if(action.equals("grow")){
                     killerDodo.grow();
                     System.out.println("You are now a size of: " + killerDodo.getSize());
@@ -143,6 +152,12 @@ public class Map {
                         break outerloop;
                     }
 
+                } else if(action.equals("undo")){ //tries go go back, will hopefully catch the exception if they are trying to back up from zero
+                    try{
+                        killerDodo.undo();
+                    } catch (RuntimeException e){
+                        System.out.println(e.getMessage());
+                    }
                 } else{
                     System.out.println("Please enter a valid action: 'walk' 'fly' 'drop' or 'grow'.");
                 }
