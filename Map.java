@@ -2,23 +2,48 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Random;
 
+/**
+ * Map class is the main game, it contains an array list of settlements and requires a dodo for the methods/playing the game
+ */
 public class Map {
-    public ArrayList<Settlement> settlements;
+    private ArrayList<Settlement> settlements;
     public String[] tools;
     
+    /**
+     * Maps are automatically constructed with a set number of settlements and predetermined tools
+     */
     public Map(){
-        this.settlements = new ArrayList<Settlement>();
-        Settlement settlement1 = new Settlement();
-        this.settlements.add(settlement1);
+
+        this.settlements = new ArrayList<Settlement>();//initializes empty arrayList
+
+        //adds 4 settlements to the arraylist of settlements in the map
+        for(int i = 0; i < 4; i++){
+            Settlement settlement = new Settlement();
+            this.settlements.add(settlement);
+        }
         
+        //pre determined tools which are given by chance to the dodo
         this.tools = new String[3];
         this.tools[0] = "infrared goggles";
         this.tools[1] = "extra large mouth";
         this.tools[2] = "sleeping bag";
     }
 
+    /**
+     * getter for the number of settlements in the nap
+     * @return the number of settlements
+     */
     public int numSettlements(){
         return this.settlements.size();
+    }
+    
+    /**
+     * getter for a specific Settlement in the map
+     * @param n the index of the settlement being accessed
+     * @return the Settlement
+     */
+    public Settlement getSettlement(int n){
+        return this.settlements.get(n);
     }
 
 
@@ -57,6 +82,34 @@ public class Map {
         }
     }
 
+    public void fortune(Dodo killerDodo, Random chance){
+
+        if(chance.nextInt(10) == 7){
+            System.out.println();
+            System.out.println("but wait....");
+            System.out.println();
+            System.out.println("The dodo gods have smiled upon you, it is your lucky day and you have found heat vision goggles...");
+            System.out.println("You get to eat and extra person, regardless of your next action.");
+            killerDodo.use(this.tools[0]); //dodo uses the tool
+            System.out.println();
+            } else if(chance.nextInt(10) == 2){
+                System.out.println();
+                System.out.println("but wait....");
+                System.out.println();
+                System.out.println("The dodo gods have smiled upon you, you have been given a sleeping bag...");
+                System.out.println("You get to rest and gain an energy/hunger point, regardless of your next action.");
+                killerDodo.grab(this.tools[2]); //dodo grabs the sleeping bag
+                killerDodo.rest(); //and takes a nap
+                System.out.println();
+            }
+    }
+
+    /**
+     * Function for walking around a given settlement and searching for the people inside and eating them
+     * @param killerDodo the dodo / player which is doing the walking
+     * @param input the scanner for the action being done, in this case direction for walking
+     * @param currentSettlement the Settlement this walking is taking place in
+     */
     public void walk(Dodo killerDodo, Scanner input, int currentSettlement){
         System.out.println("Where do you think the humans are? 'left'/'right': ");
         String dodoDirection = null;
@@ -85,13 +138,17 @@ public class Map {
     }
 
 
+    /**
+     * Main game function for Map
+     * @param args empty array of Strings
+     */
     public static void main(String[] args) {
         Map battleGround = new Map();
-        Dodo killerDodo = new Dodo();
-        Scanner input = new Scanner(System.in);
-        Random chance = new Random(); //every once in awhile, the dodo can get lucky and get a special tool
+        Dodo killerDodo = new Dodo(); //dodo for player to use
+        Scanner input = new Scanner(System.in); //scanner to get the player's actions
+        Random chance = new Random(); //randomized chance that sometimes gives the dodo a special tool
         int currentSettlement = killerDodo.getPosition();
-        String action = "begin"; //to start out with
+        String action = null; //to start out with
 
         System.out.println("Global warming has given rise to a new species of dodo... a hungry one.");
         System.out.println("If you, the dodo, can reach a size of 3, you win and humanity loses earth to its dodo overlord");
@@ -99,35 +156,20 @@ public class Map {
         System.out.println("will you play? yes/no: ('end' to end the game)");
         action = input.nextLine();
 
-        //as long as the dodo is still hungry, they keep trying to find the people
+        //as long asthe person doesn't end the loop, the game continues (unless dodo is size 3)
         outerloop:
         while(action != "end" || action != "no"){
-            //if the randomized number is 7, the dodo gets a special tool, right now it's always heat goggles and it gets to eat an extra person
-            if(chance.nextInt(10) == 7){
-                System.out.println();
-                System.out.println("but wait....");
-                System.out.println();
-                System.out.println("The dodo gods have smiled upon you, it is your lucky day and you have found heat vision goggles...");
-                System.out.println("You get to eat and extra person, regardless of your next action.");
-                killerDodo.use(battleGround.tools[0]); //dodo uses the tool
-                System.out.println();
-                } else if(chance.nextInt(10) == 2){
-                    System.out.println();
-                    System.out.println("but wait....");
-                    System.out.println();
-                    System.out.println("The dodo gods have smiled upon you, you have been given a sleeping bag...");
-                    System.out.println("You get to rest and gain an energy/hunger point, regardless of your next action.");
-                    killerDodo.grab(battleGround.tools[2]); //dodo grabs the sleeping bag
-                    killerDodo.rest(); //and takes a nap
-                    System.out.println();
-                }
+            
+            //if the random number is a special one, the dodo gets a special tool/rest, called each round
+            battleGround.fortune(killerDodo, chance);
 
+            //tells the person their options and takes their choice
             System.out.println();
             System.out.println("Your options for dodo actions are ");
             killerDodo.showOptions();
             action = input.nextLine();
-
-            while(battleGround.checkPopulation(currentSettlement)){ //game continues while there are still humans in a given settlement
+            
+            while(battleGround.checkPopulation(currentSettlement)){ //game continues while there are still humans in a given settlement, 
                 if(action.equals("walk")){
                     battleGround.walk(killerDodo, input, currentSettlement);
                 } else if(action.equals("drop")){
@@ -147,12 +189,14 @@ public class Map {
                 } else if(action.equals("grow")){
                     killerDodo.grow();
                     System.out.println("You are now a size of: " + killerDodo.getSize());
+
+                    //the object of the game, if it is reached, the game ends
                     if(killerDodo.getSize() >= 3){
                         System.out.println("You've reached the max size, you win!");
                         break outerloop;
                     }
 
-                } else if(action.equals("undo")){ //tries go go back, will hopefully catch the exception if they are trying to back up from zero
+                } else if(action.equals("undo")){ //tries to go back, will hopefully catch the exception if they are trying to back up from zero
                     try{
                         killerDodo.undo();
                     } catch (RuntimeException e){
@@ -162,12 +206,14 @@ public class Map {
                     System.out.println("Please enter a valid action: 'walk' 'fly' 'drop' or 'grow'.");
                 }
             }
+            //The object of the game, if it's reached, the game ends
             if(killerDodo.getSize() >= 3){
                 System.out.println("You've reached the max size, you win!");
                 break;
             }
-        }
 
+        }
+        //close the scanner
         input.close();
     }
 }
