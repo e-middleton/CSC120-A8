@@ -1,11 +1,19 @@
 import java.util.ArrayList;
 
+/**
+ * Dodo class, implements Contract interface, 
+ * has methods for different actions like walking, flying, growing, shrinking, examining, undoing etc. 
+ * These methods are the actions the dodo undertakes in its quest to eat the humans in the settlements
+ */
 public class Dodo implements Contract{
-    private int hunger;
+    private int hunger; //hunger is the same as energy, when it's negative, the dodo is hungry/tired and vice versa
     private int size;
     public ArrayList<String> possessions;
     private int position;
 
+    /**
+     * Default constructor for Dodo, initializes it to being hungry, size 1, possessionless, and in position 0
+     */
     public Dodo(){
         this.hunger = -1; //a Dodo is born... hungry
         this.size = 1; //normal dodo size
@@ -13,6 +21,11 @@ public class Dodo implements Contract{
         this.position = 0; //dodo begins in quadrant/settlement 0
     }
 
+    /**
+     * method to fly between settlements, only allows you to fly forwards one settlement at a time, cannot skip/jump around.
+     * @param x the starting position/settlement
+     * @param y the next settlement/the endpoint
+     */
     public boolean fly(int x, int y){
         if(x == this.position && y == (x+1)){ //you can only fly forward to the next quadrant
             if(this.hunger >= 0){
@@ -26,7 +39,9 @@ public class Dodo implements Contract{
         }
     }
 
-    //fly back to the quadrant you just came from, doesn't require any energy
+    /**
+     * A method to fly back to the quadrant you came from, not possible if in settlement 0, doesn't require energy, unlike moving forward
+     */
     public void undo(){
         if(this.position >= 0){
             this.position -= 1;
@@ -35,10 +50,18 @@ public class Dodo implements Contract{
         }
     }
 
+    /**
+     * getter for the dodo's position
+     * @return the settlement number that they're in currently
+     */
     public int getPosition(){
         return this.position;
     }
 
+    /**
+     * getter for the size of the dodo
+     * @return the size of the dodo
+     */
     public int getSize(){
         return this.size;
     }
@@ -102,6 +125,10 @@ public class Dodo implements Contract{
         }
     }
 
+    /**
+     * Method to use an item, only possible right now with a gift from chance. Increases +1 hunger points.
+     * @param item the item being used by the dodo, only one is possible now.
+     */
     public void use(String item){
         if(item.equals("infrared goggles")){
             hunger += 1; //the infrared goggles allow you to eat a person without grabbing and checking, you can see it's not a stone from afar
@@ -110,9 +137,16 @@ public class Dodo implements Contract{
         }
     }
 
+    /**
+     * Method to make the dodo shrink/reduce their size, only called if the hunger is too low/energy was used that wasn't available.
+     * haven't thought of a good reason to use this yet, was going to use it in the flying method?
+     */
     public Number shrink(){
         if(this.hunger < -1){
-            this.size -= 1; //if the dodo gets too hungry, it shrinks, called by flying
+            this.size -= 1; //if the dodo gets too hungry, it shrinks
+            if(this.size < 0){
+                throw new RuntimeException("Game over, too small, dodo died"); //if the dodo shrinks beyond size zero, the humans have won
+            }
             return this.size;
         } else{
             return this.size; //otherwise it doesn't shrink 
@@ -152,6 +186,9 @@ public class Dodo implements Contract{
         return this.size;
     }
 
+    /**
+     * method to make the dodo rest, increases +1 hunger points just like eating, only possible if given gift of sleeping bag
+     */
     public void rest(){
         if(this.possessions.contains("sleeping bag")){
             drop("sleeping bag"); //gets rid of the sleeping bag from inventory because it's been used
@@ -161,6 +198,9 @@ public class Dodo implements Contract{
         }
     }
 
+    /**
+     * Method for showing the player what options they have for the dodo, not all dodo methods make sense for being called by the player
+     */
     public void showOptions(){
         System.out.println("The options for dodo actions are: \n + 'walk' - this tries to guess where the humans are in a settlement \n + 'fly' - moves to a new settlement from the old one \n + 'undo' - goes back to the previous settlement (doesn't require energy) \n + 'grow' - increases dodo size, but only if you have 2 humans in possession to eat for energy \n + 'drop' - removes an item from possession");
     }

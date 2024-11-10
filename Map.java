@@ -82,6 +82,11 @@ public class Map {
         }
     }
 
+    /**
+     * Method for occassionally giving a surprise tool/rest to the player, same effect either way of +1 hunger
+     * @param killerDodo the player/dodo
+     * @param chance the randomized number for if they get the bonus or not
+     */
     public void fortune(Dodo killerDodo, Random chance){
 
         if(chance.nextInt(10) == 7){
@@ -99,7 +104,7 @@ public class Map {
                 System.out.println("The dodo gods have smiled upon you, you have been given a sleeping bag...");
                 System.out.println("You get to rest and gain an energy/hunger point, regardless of your next action.");
                 killerDodo.grab(this.tools[2]); //dodo grabs the sleeping bag
-                killerDodo.rest(); //and takes a nap
+                killerDodo.rest(); //dodo takes a nap and disposes of the sleeping bag
                 System.out.println();
             }
     }
