@@ -1,10 +1,16 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Settlement class, contains array list of human population and methods for returning either a stone or human when attacked
+ */
 public class Settlement {
     private ArrayList<String> humans;
     private String humanPosition;
 
+    /**
+     * default constructor initializes settlements wtih two humans, starting on the left side of the settlement
+     */
     public Settlement(){
         this.humans = new ArrayList<String>(2);
         this.humans.add("human");
@@ -59,6 +65,10 @@ public class Settlement {
         }
     }
 
+    /**
+     * main method, used for testing
+     * @param args empty array of strings
+     */
     public static void main(String[] args) {
         Settlement home = new Settlement();
         System.out.println(home.getHumanPosition());
