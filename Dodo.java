@@ -29,7 +29,9 @@ public class Dodo implements Contract{
     public boolean fly(int x, int y){
         if(x == this.position && y == (x+1)){ //you can only fly forward to the next quadrant
             if(this.hunger >= 0){
+                this.hunger -= 1;
                 this.position = y;
+                System.out.println("Now in settlement " + y);
                 return true;
             } else{
                 throw new RuntimeException("Not enough energy to fly, must eat a person before moving on.");
@@ -202,7 +204,7 @@ public class Dodo implements Contract{
      * Method for showing the player what options they have for the dodo, not all dodo methods make sense for being called by the player
      */
     public void showOptions(){
-        System.out.println("The options for dodo actions are: \n + 'walk' - this tries to guess where the humans are in a settlement \n + 'fly' - moves to a new settlement from the old one \n + 'undo' - goes back to the previous settlement (doesn't require energy) \n + 'grow' - increases dodo size, but only if you have 2 humans in possession to eat for energy \n + 'drop' - removes an item from possession");
+        System.out.println("The options for dodo actions are: \n + 'walk' - this tries to guess where the humans are in a settlement \n + 'fly' - moves to a new settlement from the old one, but ONLY if you have eaten a person for energy beforehand \n + 'undo' - goes back to the previous settlement (doesn't require energy) \n + 'grow' - increases dodo size, but only if you have 2 humans in possession to eat for energy \n + 'drop' - removes an item from possession");
     }
 
     public static void main(String[] args) {
