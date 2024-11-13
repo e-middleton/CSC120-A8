@@ -26,7 +26,7 @@ ___YES__ 10 pts: The class meaningfully implements each of the methods in descri
 
 ## General Items:
 
-___PART__ 4 pts: Programs compile without errors or warnings
+___YES__ 4 pts: Programs compile without errors or warnings
 
 ___YES__ 2 pts: Executes fully & consistently without crashing (exception/freeze)
 
@@ -44,4 +44,4 @@ ___YES__ 2 pt: Complies with style guidelines (missing items 1 pt each):
 
 __YES___ 1 pt: All required files included with submission (including completed `rubric.md` file)
 
-__PART___ 1 pt: `reflection.md` contains your reflection on the assignment, **including a detailed description of the class you implemented and what it does**
+__YES___ 1 pt: `reflection.md` contains your reflection on the assignment, **including a detailed description of the class you implemented and what it does**
