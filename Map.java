@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Random;
+import java.util.InputMismatchException;;
 
 /**
  * Map class is the main game, it contains an array list of settlements and requires a dodo for the methods/playing the game
@@ -137,7 +138,7 @@ public class Map {
                     //gets the string "human" or "stone" depending on if the Dodo guessed correctly or incorrectly 
                     spoilsOfWar = this.settlements.get(currentSettlement).attack(this.guess(killerDodo.walk(dodoDirection), currentSettlement));
                     success = true;
-                } catch(RuntimeException e){
+                } catch(InputMismatchException e){
                     System.out.println(e.getMessage());
                 }
             }
@@ -181,26 +182,27 @@ public class Map {
             System.out.println("Good luck.");
         }
 
-        //as long asthe person doesn't end the loop, the game continues (unless dodo is size 3)
+        //as long asthe person doesn't end the loop, the game continues (unless dodo is size 3) and you get 20 attempts to grow/eat
         outerloop:
-        while(!action.equals("end")){
+        while(!action.equals("end") && (counter < 20)){
             
             //if the random number is a special one, the dodo gets a special tool/rest, called each round
             battleGround.fortune(killerDodo, chance);
 
             //tells the person their options and takes their choice
+            System.out.println(counter);
             System.out.println();
             System.out.println("Your options for dodo actions are ");
             killerDodo.showOptions();
             action = input.nextLine();
             
-            while(counter < 20 && (battleGround.checkPopulation(killerDodo.getPosition(), killerDodo))){ //you get 20 tries, then the humans win, and there must be people in the settlement you're playing in
+            while((battleGround.checkPopulation(killerDodo.getPosition(), killerDodo))){ //there must be people in the settlement you're playing in
                 
                 if(action.equals("walk")){
                     System.out.println("You have two chances to guess where people are, then you must pick another action, you may reselect walk.");
                     battleGround.walk(killerDodo, input, currentSettlement);
+                    counter += 1;
                     break; //otherwise you get stuck in a weird endless loop
-
                 } else if(action.equals("drop")){
                     System.out.println("What item would you like to drop? ");
                     String item = input.nextLine();
@@ -209,25 +211,44 @@ public class Map {
                     } catch(RuntimeException e){
                         System.out.println(e.getMessage());
                     }
+                    counter += 1;
                     break; //otherwise infinite loop
                 } else if(action.equals("fly")){
                     if(currentSettlement < battleGround.numSettlements()){ //if they aren't at the last settlement yet, they can fly to the next
-                        if(killerDodo.fly(killerDodo.getPosition(), (killerDodo.getPosition() + 1))){
-                        System.out.println("You are now in the next quadrant. Please search for humans ('walk')");
+                        try{
+                            if(killerDodo.fly(killerDodo.getPosition(), (killerDodo.getPosition() + 1))){
+                            System.out.println("You are now in the next quadrant. Please search for humans ('walk')");
+                            }
+                        } catch(OutOfEnergyException e){
+                            System.out.println("You do not have enough energy/hunger points for this action, please eat a human before proceeding/choose another action.");
+                            counter += 1;
+                            break;
+                        } catch(RuntimeException e){ //for when you've tried to fly from the last settlement into no man's land/off the map
+                            System.out.println(e.getMessage());
+                            counter += 1;
+                            break;
                         }
                     } else {
                         System.out.println("At the last settlement, cannot go onward.");
                     }
+                    counter +=1;
                     break; //otherwise infinite loop
                 } else if(action.equals("grow")){
-                    killerDodo.grow();
-                    System.out.println("You are now a size of: " + killerDodo.getSize());
-                 
+                    try{
+                        killerDodo.grow();
+                        System.out.println("You are now a size of: " + killerDodo.getSize());
+                    } catch(OutOfEnergyException e){
+                        System.out.println("You do not have enough energy for this action, please pick a new action.");
+                        counter +=1;
+                        break;
+                    }
                     //the object of the game, if it is reached, the game ends
                     if(killerDodo.getSize() >= 3){
                         System.out.println("You've reached the max size, you win!");
+                        counter += 1;
                         break outerloop;
                     }
+                    counter +=1;
                     break;
                 } else if(action.equals("undo")){ //tries to go back, will hopefully catch the exception if they are trying to back up from zero
                     try{
@@ -235,17 +256,25 @@ public class Map {
                     } catch (RuntimeException e){
                         System.out.println(e.getMessage());
                     }
+                    counter +=1;
                     break; //otherwise loops
                 } else{
                     System.out.println("Please enter a valid action: 'walk' 'fly' 'drop' or 'grow'.");
                 }
-                counter += 1;
             } 
             //The object of the game, if it's reached, the game ends
             if(killerDodo.getSize() >= 3){
                 System.out.println("You've reached the max size, you win!");
+                counter +=1;
                 break;
             }
+        }
+
+        //if you have tried 20 things, and haven't eaten enough people to grow, you lose
+        if(counter >= 3 && killerDodo.getSize() < 20){
+            System.out.println();
+            System.out.println("You did not grow in time, the humans adapted and dodo's are extinct once more.");
+            System.out.println(":(");
         }
         //close the scanner
         input.close();

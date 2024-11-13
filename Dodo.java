@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 
 /**
  * Dodo class, implements Contract interface, 
@@ -34,10 +35,10 @@ public class Dodo implements Contract{
                 System.out.println("Now in settlement " + y);
                 return true;
             } else{
-                throw new RuntimeException("Not enough energy to fly, must eat a person before moving on.");
+                throw new OutOfEnergyException();
             }
         } else{
-            throw new RuntimeException("Cannot fly to a settlement unless it is the one nearby.");
+            throw new RuntimeException("Cannot fly to a settlement unless it is the one nearby."); //shouldn't be triggered because of code in Map class
         }
     }
 
@@ -123,7 +124,7 @@ public class Dodo implements Contract{
         } else if(direction.equals("right")){
           return false;
         } else{
-            throw new RuntimeException("Invalid input, must enter 'left' or 'right'.");
+            throw new InputMismatchException("Invalid input, must enter 'left' or 'right'.");
         }
     }
 
@@ -182,7 +183,7 @@ public class Dodo implements Contract{
                 this.hunger -= 2; //energy is used
                 this.size += 1;
             } else{
-                System.out.println("Not enough energy or people to eat, can't grow.");
+                throw new OutOfEnergyException(); //the dodo doesn't have enough energy to grow
             }
         }
         return this.size;
