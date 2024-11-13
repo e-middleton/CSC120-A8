@@ -124,19 +124,23 @@ public class Map {
      */
     public void walk(Dodo killerDodo, Scanner input, int currentSettlement){
         int counter = 0;
-        System.out.println("Where do you think the humans are? 'left'/'right': ");
         String dodoDirection = null;
 
         while(counter < 2){ //you get two tries while walking, then you pick a new action
-            try{ 
-                dodoDirection = input.nextLine(); //Dodo is able to walk left or right, walk() function returns true for left, false for right
-            } catch(RuntimeException e){
-                System.out.println(e.getMessage());
-                dodoDirection = input.nextLine(); //Exception isn't being handled?
-            }
+            boolean success = false;
+            String spoilsOfWar = null;
 
-            //gets the string "human" or "stone" depending on if the Dodo guessed correctly or incorrectly 
-            String spoilsOfWar = this.settlements.get(currentSettlement).attack(this.guess(killerDodo.walk(dodoDirection), currentSettlement));
+            while(!success){
+                try{ 
+                    System.out.println("Where do you think the humans are? 'left'/'right': ");
+                    dodoDirection = input.nextLine(); //Dodo is able to walk left or right, walk() function returns true for left, false for right
+                    //gets the string "human" or "stone" depending on if the Dodo guessed correctly or incorrectly 
+                    spoilsOfWar = this.settlements.get(currentSettlement).attack(this.guess(killerDodo.walk(dodoDirection), currentSettlement));
+                    success = true;
+                } catch(RuntimeException e){
+                    System.out.println(e.getMessage());
+                }
+            }
             
             //either way the dodo grabs the stone/human before checking it with .examine()
             killerDodo.grab(spoilsOfWar);
@@ -152,7 +156,6 @@ public class Map {
             counter += 1;
         }
     }
-
 
     /**
      * Main game function for Map
@@ -173,6 +176,10 @@ public class Map {
         System.out.println("will you play? 'yes'/'no': ('end' to end the game)");
 
         action = input.nextLine();
+        if(action.equals("yes")){
+            System.out.println("... excellent news. You will have 20 attempts to eat and grow as the dodo before the humans adapt and win the game.");
+            System.out.println("Good luck.");
+        }
 
         //as long asthe person doesn't end the loop, the game continues (unless dodo is size 3)
         outerloop:

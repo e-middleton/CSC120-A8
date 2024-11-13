@@ -95,7 +95,7 @@ public class Dodo implements Contract{
             this.possessions.remove(item);
             return item;
         } else{
-            throw new RuntimeException(item + " cannot be dropped, it was never grabbed.");
+            throw new RuntimeException(item + " cannot be dropped, it is not in possession.");
         }
     }
 
@@ -135,7 +135,7 @@ public class Dodo implements Contract{
         if(item.equals("infrared goggles")){
             hunger += 1; //the infrared goggles allow you to eat a person without grabbing and checking, you can see it's not a stone from afar
         } else{
-            throw new RuntimeException("I didn't plan for any other tools? What on earth have you given the dodo?");
+            throw new RuntimeException("I didn't plan for any other tools? What on earth have you given the dodo!?");
         }
     }
 
@@ -207,6 +207,9 @@ public class Dodo implements Contract{
         System.out.println("The options for dodo actions are: \n + 'walk' - this tries to guess where the humans are in a settlement \n + 'fly' - moves to a new settlement from the old one, but ONLY if you have eaten a person for energy beforehand \n + 'undo' - goes back to the previous settlement (doesn't require energy) \n + 'grow' - increases dodo size, but only if you have 2 humans in possession to eat for energy \n + 'drop' - removes an item from possession");
     }
 
+    /**
+     * Main method for dodo, used for testing
+     */
     public static void main(String[] args) {
         Dodo dodo = new Dodo();
         dodo.showOptions();
