@@ -26,6 +26,7 @@ public class Dodo implements Contract{
      * method to fly between settlements, only allows you to fly forwards one settlement at a time, cannot skip/jump around.
      * @param x the starting position/settlement
      * @param y the next settlement/the endpoint
+     * @return boolean t/f if the dodo was able to fly forward
      */
     public boolean fly(int x, int y){
         if(x == this.position && y == (x+1)){ //you can only fly forward to the next quadrant
